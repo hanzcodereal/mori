@@ -13,18 +13,6 @@
   --transition: all 0.2s ease;
 }
 
-[data-theme="dark"] {
-  --bg-color: #1a1917;
-  --bg-rgb: 26, 25, 23;
-  --surface: #242220;
-  --surface-rgb: 36, 34, 32;
-  --primary: #fffbf2;
-  --primary-rgb: 255, 251, 242;
-  --on-primary: #1a1917;
-  --text-main: #fffbf2;
-  --text-secondary: #a09a90;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -63,46 +51,6 @@ header {
   margin-bottom: 40px;
   text-align: center;
   position: relative;
-}
-
-.theme-toggle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid var(--primary);
-  background: var(--surface);
-  color: var(--text-main);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: var(--transition);
-}
-
-.theme-toggle:hover {
-  box-shadow: 3px 3px 0px var(--primary);
-}
-
-.theme-toggle .icon-moon {
-  display: none;
-}
-
-.theme-toggle.active .icon-sun {
-  display: none;
-}
-
-.theme-toggle.active .icon-moon {
-  display: block;
-}
-
-.dl-empty {
-  padding: 20px 16px;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
 }
 
 header h1 {
@@ -215,11 +163,12 @@ input[type="text"]:focus {
   background: linear-gradient(
     90deg,
     var(--surface) 25%,
-    var(--bg-color) 50%,
+    var(--primary) 50%,
     var(--surface) 75%
   );
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite linear;
+  opacity: 0.1;
 }
 
 .skeleton-info {
@@ -231,13 +180,14 @@ input[type="text"]:focus {
   background: linear-gradient(
     90deg,
     var(--surface) 25%,
-    var(--bg-color) 50%,
+    var(--primary) 50%,
     var(--surface) 75%
   );
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite linear;
   border-radius: 4px;
   margin-bottom: 12px;
+  opacity: 0.1;
 }
 
 .skeleton-line.title {
@@ -389,13 +339,11 @@ input[type="text"]:focus {
   backdrop-filter: blur(4px);
 }
 
-#slidePrevBtn,
-#modalSlidePrevBtn {
+#slidePrevBtn {
   left: 10px;
 }
 
-#slideNextBtn,
-#modalSlideNextBtn {
+#slideNextBtn {
   right: 10px;
 }
 
@@ -494,10 +442,8 @@ input[type="text"]:focus {
 .progress-bar {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--primary), #00d2ff);
-  box-shadow: 0 0 10px var(--primary);
+  background: var(--primary);
   transition: width 0.3s ease;
-  position: relative;
 }
 
 .supported-section {
@@ -598,7 +544,7 @@ input[type="text"]:focus {
 }
 
 .footer-link.support-link:hover {
-  color: #ff6b6b;
+  color: var(--text-main);
 }
 
 .footer-link.contact-link:hover {
@@ -770,4 +716,4 @@ input[type="text"]:focus {
 .custom-toast.show {
   opacity: 1;
   transform: translateX(-50%) translateY(0);
-  }
+}
