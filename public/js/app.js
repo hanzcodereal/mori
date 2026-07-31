@@ -33,23 +33,44 @@
   const infoMessage = $('infoMessage');
   const progressContainer = $('progressContainer');
   const progressBar = $('progressBar');
-  const darkModeToggle = $('darkModeToggle');
 
   let slideItems = [];
   let curSlide = 0;
   let progressTimer = null;
 
-  const savedTheme = localStorage.getItem('mori_theme') || 'light';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-  if (darkModeToggle) {
-    darkModeToggle.classList.toggle('active', savedTheme === 'dark');
-    darkModeToggle.onclick = () => {
-      const current = document.documentElement.getAttribute('data-theme');
-      const next = current === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', next);
-      localStorage.setItem('mori_theme', next);
-      darkModeToggle.classList.toggle('active', next === 'dark');
-    };
+  function getTimestamp() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+  }
+
+  function downloadFile(url, filename) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function getFileExtension(url) {
+    const cleanUrl = url.split('?')[0];
+    const ext = cleanUrl.split('.').pop().toLowerCase();
+    const validExt = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mp3', 'm4a', 'wav', 'flac', 'm4v', 'mov', 'avi'];
+    return validExt.includes(ext) ? ext : '';
+  }
+
+  function generateFilename(title, quality, type, url) {
+    const cleanTitle = title.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 40);
+    const timestamp = getTimestamp();
+    const ext = getFileExtension(url) || (type === 'video' ? 'mp4' : type === 'audio' ? 'mp3' : 'jpg');
+    const qualityLabel = quality.replace(/\s+/g, '_').toLowerCase();
+    return `${cleanTitle}_${qualityLabel}_${timestamp}.${ext}`;
   }
 
   pasteBtn.onclick = async () => {
@@ -86,6 +107,10 @@
     if (url.includes('instagram.com')) return 'instagram';
     if (url.includes('twitter.com') || url.includes('x.com')) return 'twitter';
     if (url.includes('spotify.com')) return 'spotify';
+    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
+    if (url.includes('music.apple.com') || url.includes('apple.com/music')) return 'applemusic';
+    if (url.includes('threads.net') || url.includes('threads.com')) return 'threads';
+    if (url.includes('pin.it') || url.includes('pinterest.com')) return 'pinterest';
     return null;
   };
 
@@ -94,7 +119,11 @@
     facebook: 'Facebook',
     instagram: 'Instagram',
     twitter: 'Twitter/X',
-    spotify: 'Spotify'
+    spotify: 'Spotify',
+    youtube: 'YouTube',
+    applemusic: 'Apple Music',
+    threads: 'Threads',
+    pinterest: 'Pinterest'
   };
 
   function startProgress() {
@@ -181,7 +210,10 @@
     loader.classList.add('hidden');
     resultSection.classList.remove('hidden');
 
-    const title = (data.title || 'Content').replace(/#[^\s#]+/g, '').trim();
+    let title = (data.title || 'Content').replace(/#[^\s#]+/g, '').trim();
+    if (data.username && !title.includes(data.username)) {
+      title = `${title} - @${data.username}`;
+    }
     resultTitle.textContent = title.slice(0, 80);
 
     downloadList.innerHTML = '';
@@ -225,8 +257,9 @@
         btn.innerHTML = `<div>${label}</div><span>${dl.type || 'Media'}</span>`;
         btn.onclick = () => {
           if (dl.url) {
+            const filename = generateFilename(title, label, dl.type, dl.url);
+            downloadFile(dl.url, filename);
             toast('Download started: ' + label);
-            window.open(dl.url, '_blank');
           } else {
             toast('Download link unavailable');
           }
