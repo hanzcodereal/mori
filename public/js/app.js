@@ -102,15 +102,16 @@
   };
 
   const getPlatform = (url) => {
-    if (url.includes('tiktok.com') || url.includes('vt.tiktok.com')) return 'tiktok';
-    if (url.includes('facebook.com') || url.includes('fb.com') || url.includes('fb.watch')) return 'facebook';
-    if (url.includes('instagram.com')) return 'instagram';
-    if (url.includes('twitter.com') || url.includes('x.com')) return 'twitter';
-    if (url.includes('spotify.com')) return 'spotify';
-    if (url.includes('youtube.com') || url.includes('youtu.be')) return 'youtube';
-    if (url.includes('music.apple.com') || url.includes('apple.com/music')) return 'applemusic';
-    if (url.includes('threads.net') || url.includes('threads.com')) return 'threads';
-    if (url.includes('pin.it') || url.includes('pinterest.com')) return 'pinterest';
+    const u = url.toLowerCase();
+    if (u.includes('tiktok.com') || u.includes('vt.tiktok.com')) return 'tiktok';
+    if (u.includes('facebook.com') || u.includes('fb.com') || u.includes('fb.watch')) return 'facebook';
+    if (u.includes('instagram.com')) return 'instagram';
+    if (u.includes('twitter.com') || u.includes('x.com')) return 'twitter';
+    if (u.includes('spotify.com')) return 'spotify';
+    if (u.includes('youtube.com') || u.includes('youtu.be')) return 'youtube';
+    if (u.includes('music.apple.com') || u.includes('apple.com/music')) return 'applemusic';
+    if (u.includes('threads.net') || u.includes('threads.com') || u.includes('threads')) return 'threads';
+    if (u.includes('pin.it') || u.includes('pinterest.com')) return 'pinterest';
     return null;
   };
 
